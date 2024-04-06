@@ -12,16 +12,15 @@ export class UsersController {
 
   @Post()
   @ApiCreatedResponse({ description: 'เพิ่มข้อมูลสำเร็จ' })
-  async create(@Body() createUserDto: CreateUserDto) {
+  async create(@Res() response, @Body() createUserDto: CreateUserDto) {
     try{
       const CreateData = await this.usersService.create(createUserDto);
       return response.status(HttpStatus.CREATED).json({
         StatusCode : HttpStatus.OK,
-        message:'Create Data Successfully',
+        message:'เพิ่มข้อมูลสำเร็จ',
         data : CreateData
       });
     }catch(err){
-      console.log(err);
       return response.status(HttpStatus.BAD_REQUEST).json({
         status : false ,
         message : "Error !!"
@@ -40,7 +39,6 @@ export class UsersController {
         UserData,
       });
     } catch (err) {
-      console.log(err);
       return response.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
         StatusCode : HttpStatus.BAD_GATEWAY,
         Message: "Server Error"
@@ -50,19 +48,54 @@ export class UsersController {
 
   @Get(':id')
   @ApiOkResponse({ status: 200, description: 'แสดงข้อมูลเดียว' })
-  findOne(@Param('id') id: string) {
-    return this.usersService.findOne(+id);
+  async findOne(@Res() response, @Param('id') id: string) {
+    try {
+      const UserData = await this.usersService.findOne(+id);
+      return response.status(HttpStatus.OK).json({
+        StatusCode : HttpStatus.OK,
+        message: 'แสดงข้อมูลเดียว', 
+        UserData,
+      });
+    } catch (err) {
+      return response.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+        StatusCode : HttpStatus.BAD_GATEWAY,
+        Message: "Server Error"
+      });
+    }
   }
 
   @Patch(':id')
   @ApiOkResponse({ status: 200, description: 'แก้ไขข้อมูลสำเร็จ' })
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.update(+id, updateUserDto);
+  async update(@Res() response, @Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+    try {
+      const EditData = await this.usersService.update(+id, updateUserDto);
+      return response.status(HttpStatus.OK).json({
+        StatusCode : HttpStatus.OK,
+        message: 'แก้ไขข้อมูลสำเร็จ', 
+        EditData,
+      });
+    } catch (err) {
+      return response.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+        StatusCode : HttpStatus.BAD_GATEWAY,
+        Message: "Server Error"
+      });
+    }
   }
 
   @Delete(':id')
   @ApiOkResponse({ status: 200, description: 'ลบข้อมูลสำเร็จ' })
-  remove(@Param('id') id: string) {
-    return this.usersService.remove(+id);
+  async remove(@Res() response, @Param('id') id: string) {
+    try {
+      const DelData = await this.usersService.remove(+id);
+      return response.status(HttpStatus.OK).json({
+        StatusCode : HttpStatus.OK,
+        message: 'ลบข้อมูลสำเร็จ'
+      });
+    } catch (err) {
+      return response.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+        StatusCode : HttpStatus.BAD_GATEWAY,
+        Message: "Server Error"
+      });
+    }
   }
 }
