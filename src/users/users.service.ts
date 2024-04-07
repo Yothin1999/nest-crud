@@ -18,8 +18,7 @@ export class UsersService {
   }
 
   findAll(): Promise<User[]> {
-    return this.usersRepository.find
-      (
+    return this.usersRepository.find(
         {
           select:
             [
@@ -32,8 +31,21 @@ export class UsersService {
       );
   }
 
-  findOne(id: number): Promise<User | null> {
-    return this.usersRepository.findOneBy({ id });
+  async findOne(id: number): Promise<User | null> {
+    const user = await this.usersRepository.findOne(
+      {select:
+        [
+          'firstName', 
+          'lastName',
+        ], 
+        where: {id: id}
+      });
+    return user;
+  }
+
+  async findOneby(id: number): Promise<User | null> {
+    const user = await this.usersRepository.findOneBy({ id });
+    return user;
   }
 
   async update(id: number, updateUserDto: UpdateUserDto) {

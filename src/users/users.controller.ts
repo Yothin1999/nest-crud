@@ -71,6 +71,31 @@ export class UsersController {
     }
   }
 
+  @Get('allfield/:id')
+  @ApiOkResponse({ status: 200, description: 'แสดงข้อมูลเดียว' })
+  async findOneby(@Res() response, @Param('id') id: string) {
+    try {
+      const UserData = await this.usersService.findOneby(+id);
+      if (!UserData) {
+        return response.status(HttpStatus.NOT_FOUND).json({
+          StatusCode: HttpStatus.NOT_FOUND,
+          message: 'ไม่พบข้อมูล',
+          UserData,
+        });
+      }
+      return response.status(HttpStatus.OK).json({
+        StatusCode: HttpStatus.OK,
+        message: 'พบข้อมูล',
+        UserData,
+      });
+    } catch (err) {
+      return response.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+        StatusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+        Message: "Server Error"
+      });
+    }
+  }
+
   @Patch(':id')
   @ApiOkResponse({ status: 200, description: 'แก้ไขข้อมูลสำเร็จ' })
   async update(@Res() response, @Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
