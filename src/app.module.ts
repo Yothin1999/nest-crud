@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
+import { User } from './users/entities/user.entity';
 
 @Module({
   imports: [TypeOrmModule.forRoot({
@@ -13,7 +14,8 @@ import { DataSource } from 'typeorm';
       username: 'root',
       password: '',
       database: 'nest-crud',
-      entities: ["dist/**/*.entity{.ts,.js}"],
+      // entities: ["dist/**/*.entity{.ts,.js}"],
+      entities: [User],
       synchronize: true,
   }),
     UsersModule],

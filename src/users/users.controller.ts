@@ -2,8 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, HttpStatus, Res } fr
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { ApiResponse, ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
-import { response } from 'express';
+import { ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Users')
 @Controller('users')
@@ -13,17 +12,18 @@ export class UsersController {
   @Post()
   @ApiCreatedResponse({ description: 'เพิ่มข้อมูลสำเร็จ' })
   async create(@Res() response, @Body() createUserDto: CreateUserDto) {
-    try{
+    try {
       const CreateData = await this.usersService.create(createUserDto);
       return response.status(HttpStatus.CREATED).json({
-        StatusCode : HttpStatus.OK,
-        message:'เพิ่มข้อมูลสำเร็จ',
-        data : CreateData
+        StatusCode: HttpStatus.CREATED,
+        Message: 'เพิ่มข้อมูลสำเร็จ',
+        data: CreateData
       });
-    }catch(err){
+    } catch (err) {
       return response.status(HttpStatus.BAD_REQUEST).json({
-        status : false ,
-        message : "Error !!"
+        StatusCode: HttpStatus.BAD_REQUEST,
+        status: false,
+        Message: "Error !!"
       });
     }
   }
@@ -34,13 +34,13 @@ export class UsersController {
     try {
       const UserData = await this.usersService.findAll();
       return response.status(HttpStatus.OK).json({
-        StatusCode : HttpStatus.OK,
-        message: 'แสดงข้อมูลทั้งหมด', 
+        StatusCode: HttpStatus.OK,
+        Message: 'แสดงข้อมูลทั้งหมด',
         UserData,
       });
     } catch (err) {
       return response.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
-        StatusCode : HttpStatus.BAD_GATEWAY,
+        StatusCode: HttpStatus.INTERNAL_SERVER_ERROR,
         Message: "Server Error"
       });
     }
@@ -51,14 +51,21 @@ export class UsersController {
   async findOne(@Res() response, @Param('id') id: string) {
     try {
       const UserData = await this.usersService.findOne(+id);
+      if (!UserData) {
+        return response.status(HttpStatus.NOT_FOUND).json({
+          StatusCode: HttpStatus.NOT_FOUND,
+          message: 'ไม่พบข้อมูล',
+          UserData,
+        });
+      }
       return response.status(HttpStatus.OK).json({
-        StatusCode : HttpStatus.OK,
-        message: 'แสดงข้อมูลเดียว', 
+        StatusCode: HttpStatus.OK,
+        message: 'พบข้อมูล',
         UserData,
       });
     } catch (err) {
       return response.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
-        StatusCode : HttpStatus.BAD_GATEWAY,
+        StatusCode: HttpStatus.INTERNAL_SERVER_ERROR,
         Message: "Server Error"
       });
     }
@@ -69,14 +76,21 @@ export class UsersController {
   async update(@Res() response, @Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     try {
       const EditData = await this.usersService.update(+id, updateUserDto);
+      if (!EditData) {
+        return response.status(HttpStatus.NOT_FOUND).json({
+          StatusCode: HttpStatus.NOT_FOUND,
+          message: 'ไม่พบข้อมูลที่จะแก้ไข',
+          EditData,
+        })
+      }
       return response.status(HttpStatus.OK).json({
-        StatusCode : HttpStatus.OK,
-        message: 'แก้ไขข้อมูลสำเร็จ', 
+        StatusCode: HttpStatus.OK,
+        Message: 'แก้ไขข้อมูลสำเร็จ',
         EditData,
       });
     } catch (err) {
       return response.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
-        StatusCode : HttpStatus.BAD_GATEWAY,
+        StatusCode: HttpStatus.INTERNAL_SERVER_ERROR,
         Message: "Server Error"
       });
     }
@@ -87,13 +101,21 @@ export class UsersController {
   async remove(@Res() response, @Param('id') id: string) {
     try {
       const DelData = await this.usersService.remove(+id);
+      if (!DelData) {
+        return response.status(HttpStatus.NOT_FOUND).json({
+          StatusCode: HttpStatus.NOT_FOUND,
+          Message: 'ไม่พบข้อมูลที่ต้องการลบ',
+          DelData,
+        })
+      }
       return response.status(HttpStatus.OK).json({
-        StatusCode : HttpStatus.OK,
-        message: 'ลบข้อมูลสำเร็จ'
+        StatusCode: HttpStatus.OK,
+        Message: 'ลบข้อมูลสำเร็จ',
+        DelData,
       });
     } catch (err) {
       return response.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
-        StatusCode : HttpStatus.BAD_GATEWAY,
+        StatusCode: HttpStatus.INTERNAL_SERVER_ERROR,
         Message: "Server Error"
       });
     }
