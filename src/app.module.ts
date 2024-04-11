@@ -17,6 +17,7 @@ import { User } from './users/entities/user.entity';
       // entities: ["dist/**/*.entity{.ts,.js}"],
       entities: [User],
       synchronize: true,
+      logging : true 
   }),
     UsersModule],
   controllers: [AppController],
