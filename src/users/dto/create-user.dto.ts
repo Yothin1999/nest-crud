@@ -1,27 +1,28 @@
 import { ApiProperty } from '@nestjs/swagger';
-export class CreateUserDto {
-    id: string;
 
+export class CreateUserDto {
+    
     @ApiProperty({
         description: 'ชื่อ',
-        example : 'Yothin'
+        example: 'Yothin'
     })
     firstName: string;
+
     @ApiProperty({
         description: 'นามสกุล',
-        example : 'Tangchanachaiphong'
+        example: 'Tangchanachaiphong'
     })
     lastName: string;
     
     @ApiProperty({
-        description: 'email',
-        example : 'test@test.com'
+        description: 'อีเมล',
+        example: 'test@test.com'
     })
     email: string;
 
     @ApiProperty({
-        description: 'True || False',
-        example : 'True'
+        description: 'สถานะการใช้งาน',
+        example: true
     })
     isActive: boolean;
 }
