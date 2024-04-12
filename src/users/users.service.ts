@@ -16,11 +16,30 @@ export class UsersService {
         const users = this.usersRepository.create(createUserDto);
         const user = await this.usersRepository.findOneBy({ email:users.email });
         if(user){
-            throw new HttpException('มีอีเมลซ้ำไม่สามารถเพิ่มข้อมูลได้',HttpStatus.BAD_REQUEST)
+            throw new HttpException(`มีอีเมลซ้ำไม่สามารถเพิ่มข้อมูลได้: ${user.email}`,HttpStatus.BAD_REQUEST)
         }
         await this.usersRepository.save(users);
         return users;
     }
+    async createall(createUserDto: CreateUserDto[]) {
+        const DupEmails: string[] = [];
+        for (const user of createUserDto) {
+            const existingUser = await this.usersRepository.findOneBy({ email: user.email });
+            if (existingUser) {
+                DupEmails.push(user.email);
+            } else {
+                await this.usersRepository.create(user);
+            }
+        }
+    
+        if (DupEmails.length > 0) {
+            throw new HttpException(`มีอีเมลซ้ำไม่สามารถเพิ่มข้อมูลได้: ${DupEmails.join(", ")}`, HttpStatus.BAD_REQUEST);
+        } else {
+            const users = await this.usersRepository.save(createUserDto);
+            return users;
+        }
+    }
+    
 
     async findAll(): Promise<User[]> {
         return this.usersRepository.find(

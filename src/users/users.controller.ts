@@ -3,6 +3,7 @@ import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiBadRequestResponse, 
+  ApiBody, 
   ApiCreatedResponse, 
   ApiNotFoundResponse, 
   ApiOkResponse, 
@@ -21,7 +22,19 @@ export class UsersController {
     const CreateData = await this.usersService.create(createUserDto);
     return response.status(HttpStatus.CREATED).json({
       statusCode: HttpStatus.CREATED,
-      Message: 'เพิ่มข้อมูลสำเร็จ',
+      message: 'เพิ่มข้อมูลสำเร็จ',
+      data: CreateData
+    });
+  }
+  @Post('more')
+  @ApiCreatedResponse({ description: 'เพิ่มข้อมูลสำเร็จ' })
+  @ApiBadRequestResponse({ description: 'มีอีเมลซ้ำไม่สามารถเพิ่มข้อมูลได้' })
+  @ApiBody({ type: [CreateUserDto] })
+  async createall(@Res() response, @Body() createUserDto: CreateUserDto[]) {
+    const CreateData = await this.usersService.createall(createUserDto);
+    return response.status(HttpStatus.CREATED).json({
+      statusCode: HttpStatus.CREATED,
+      message: 'เพิ่มข้อมูลสำเร็จ',
       data: CreateData
     });
   }
@@ -32,7 +45,7 @@ export class UsersController {
     const UserData = await this.usersService.findAll();
     return response.status(HttpStatus.OK).json({
       statusCode: HttpStatus.OK,
-      Message: 'แสดงข้อมูลทั้งหมด',
+      message: 'แสดงข้อมูลทั้งหมด',
       UserData,
     });
   }
@@ -64,6 +77,7 @@ export class UsersController {
   @Patch(':id')
   @ApiOkResponse({ description: 'แก้ไขข้อมูลสำเร็จ' })
   @ApiNotFoundResponse({ description: 'ไม่สามารถอัปเดตข้อมูลได้ เนื่องจากไม่พบข้อมูล' })
+  @ApiBody({ type: UpdateUserDto })
   async update(@Res() response, @Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     const EditData = await this.usersService.update(id, updateUserDto);
     return response.status(HttpStatus.OK).json({
