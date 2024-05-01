@@ -46,6 +46,10 @@ export class UsersService {
             // { select: ['firstName', 'lastName',] }
         );
     }
+    async findAllSQL(): Promise<User[]> {
+        // return this.usersRepository.createQueryBuilder().select("*").where("firstName = :id",{id:'Yothin'}).getRawOne();
+        return this.usersRepository.createQueryBuilder().select("*").getRawMany();
+    }
 
     async findOne(id: string): Promise<User | null> {
         const user = await this.usersRepository.findOne({ select: ['firstName', 'lastName',], where: { id: id } });

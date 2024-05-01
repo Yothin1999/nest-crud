@@ -39,10 +39,21 @@ export class UsersController {
     });
   }
 
-  @Get()
+  @Get('all')
   @ApiOkResponse({ description: 'แสดงข้อมูลทั้งหมด' })
   async findAll(@Res() response) {
     const UserData = await this.usersService.findAll();
+    return response.status(HttpStatus.OK).json({
+      statusCode: HttpStatus.OK,
+      message: 'แสดงข้อมูลทั้งหมด',
+      UserData,
+    });
+  }
+
+  @Get('allsql')
+  @ApiOkResponse({ description: 'แสดงข้อมูลทั้งหมด' })
+  async findAllSQL(@Res() response) {
+    const UserData = await this.usersService.findAllSQL();
     return response.status(HttpStatus.OK).json({
       statusCode: HttpStatus.OK,
       message: 'แสดงข้อมูลทั้งหมด',
