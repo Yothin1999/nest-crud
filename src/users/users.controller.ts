@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpStatus, Res } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Put, Param, Delete, HttpStatus, Res} from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -85,7 +85,8 @@ export class UsersController {
     })
   }
 
-  @Patch(':id')
+  // @Patch(':id')
+  @Put(':id')
   @ApiOkResponse({ description: 'แก้ไขข้อมูลสำเร็จ' })
   @ApiNotFoundResponse({ description: 'ไม่สามารถอัปเดตข้อมูลได้ เนื่องจากไม่พบข้อมูล' })
   @ApiBody({ type: UpdateUserDto })

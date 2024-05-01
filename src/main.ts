@@ -8,6 +8,7 @@ async function bootstrap() {
   const config = new DocumentBuilder()
     .setTitle('User Crud API')
     .setDescription('User API description')
+    .setLicense('Yothinc','')
     .setVersion('1.0')
     .build();
   const document = SwaggerModule.createDocument(app, config);
